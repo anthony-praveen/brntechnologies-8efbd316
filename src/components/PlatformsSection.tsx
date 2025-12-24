@@ -6,14 +6,17 @@ const platforms = [
   {
     status: "live",
     statusLabel: "Live Product",
-    statusColor: "bg-green-500/10 text-green-600 border-green-500/20",
+    statusColor: "bg-[#FF7033]/10 text-[#FF7033] border-[#FF7033]/20",
+    cardStyle: "bg-gradient-to-br from-[#F8F7FF] to-white border-[#FF7033]/30 hover:border-[#FF7033]/60 hover:shadow-[0_10px_40px_-10px_rgba(255,112,51,0.3)]",
     icon: CheckCircle,
+    iconColor: "text-[#FF7033]",
     name: "Service Geni",
     tagline: "Proof of Execution",
     description:
       "Service management platform built and operated by BRN Technologies. Demonstrates full product lifecycle ownership—from idea to build to launch to operate.",
     link: "https://servicegeni.in",
     ctaText: "View Platform",
+    ctaStyle: "bg-[#FF7033] hover:bg-[#E5632E] text-white border-none",
   },
   {
     status: "near-launch",
@@ -68,20 +71,22 @@ const PlatformsSection = () => {
           {platforms.map((platform, index) => (
             <div
               key={index}
-              className="bg-background rounded-xl border border-border p-8 hover:border-primary/30 transition-all duration-300 flex flex-col"
+              className={`rounded-xl border p-8 transition-all duration-300 flex flex-col ${
+                platform.cardStyle || "bg-background border-border hover:border-primary/30"
+              }`}
             >
               <Badge
                 variant="outline"
                 className={`w-fit mb-4 ${platform.statusColor}`}
               >
-                <platform.icon className="w-3 h-3 mr-1" />
+                <platform.icon className={`w-3 h-3 mr-1 ${platform.iconColor || ""}`} />
                 {platform.statusLabel}
               </Badge>
 
               <h3 className="text-xl font-bold text-foreground mb-2">
                 {platform.name}
               </h3>
-              <p className="text-primary font-medium text-sm mb-4">
+              <p className={`font-medium text-sm mb-4 ${platform.iconColor || "text-primary"}`}>
                 {platform.tagline}
               </p>
               <p className="text-muted-foreground text-sm leading-relaxed flex-grow mb-6">
@@ -95,7 +100,10 @@ const PlatformsSection = () => {
                   rel="noopener noreferrer"
                   className="inline-block"
                 >
-                  <Button variant="outline" className="gap-2 w-full">
+                  <Button 
+                    variant="outline" 
+                    className={`gap-2 w-full ${platform.ctaStyle || ""}`}
+                  >
                     {platform.ctaText}
                     <ExternalLink className="w-4 h-4" />
                   </Button>

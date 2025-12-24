@@ -1,4 +1,4 @@
-import { Code2, Cloud, TestTube, Lightbulb } from "lucide-react";
+import { Code2, Cloud, TestTube, Lightbulb, Linkedin } from "lucide-react";
 import founderPortrait from "@/assets/founder-portrait.jpg";
 
 const capabilities = [
@@ -67,7 +67,18 @@ const AboutSection = () => {
               <h3 className="text-2xl md:text-3xl font-bold text-foreground mt-4 mb-4">
                 Maria Zita Anthony
               </h3>
-              <p className="text-primary font-medium mb-4">Founder & CEO</p>
+              <div className="flex items-center gap-3 mb-4">
+                <p className="text-primary font-medium">Founder & CEO</p>
+                <a
+                  href="https://www.linkedin.com/in/maria-zita-anthony/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#0A66C2] hover:text-[#004182] transition-colors"
+                  aria-label="Maria Zita Anthony on LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
               <p className="text-muted-foreground leading-relaxed mb-6">
                 Entrepreneur and technology leader with strong expertise in software engineering, product delivery, and quality assurance.
               </p>

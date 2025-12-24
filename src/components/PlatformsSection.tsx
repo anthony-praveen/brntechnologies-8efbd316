@@ -36,14 +36,20 @@ const platforms = [
   {
     status: "stealth",
     statusLabel: "Stealth Mode",
-    statusColor: "bg-primary/10 text-primary border-primary/20",
+    statusColor: "bg-[#FFD700]/10 text-[#B8860B] border-[#FFD700]/30",
+    cardStyle: "bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border-[#FFD700]/40 hover:border-[#FFD700]/70 hover:shadow-[0_10px_40px_-10px_rgba(255,215,0,0.35)]",
     icon: Lock,
+    iconColor: "text-[#FFD700]",
     name: "Revolutionary Marketing Platform",
     tagline: "Next-Generation Product",
+    taglineColor: "text-[#FFD700]",
+    descriptionColor: "text-gray-400",
+    titleColor: "text-white",
     description:
       "A proprietary marketing solution under development, designed to redefine how businesses approach growth, intelligence, and execution. Platform-first, data-driven architecture built for scale.",
     link: null,
     ctaText: "Connect for Details",
+    ctaStyle: "bg-gradient-to-r from-[#B8860B] to-[#FFD700] hover:from-[#DAA520] hover:to-[#FFD700] text-black border-none font-semibold",
   },
 ];
 
@@ -86,13 +92,13 @@ const PlatformsSection = () => {
                 {platform.statusLabel}
               </Badge>
 
-              <h3 className="text-xl font-bold text-foreground mb-2">
+              <h3 className={`text-xl font-bold mb-2 ${platform.titleColor || "text-foreground"}`}>
                 {platform.name}
               </h3>
-              <p className={`font-medium text-sm mb-4 ${platform.iconColor || "text-primary"}`}>
+              <p className={`font-medium text-sm mb-4 ${platform.taglineColor || platform.iconColor || "text-primary"}`}>
                 {platform.tagline}
               </p>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-grow mb-6">
+              <p className={`text-sm leading-relaxed flex-grow mb-6 ${platform.descriptionColor || "text-muted-foreground"}`}>
                 {platform.description}
               </p>
 

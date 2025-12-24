@@ -21,14 +21,17 @@ const platforms = [
   {
     status: "near-launch",
     statusLabel: "Near-Launch",
-    statusColor: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+    statusColor: "bg-[#38b2ac]/10 text-[#38b2ac] border-[#38b2ac]/20",
+    cardStyle: "bg-gradient-to-br from-[#f0fdfa] to-white border-[#38b2ac]/30 hover:border-[#38b2ac]/60 hover:shadow-[0_10px_40px_-10px_rgba(56,178,172,0.3)]",
     icon: Clock,
+    iconColor: "text-[#38b2ac]",
     name: "Home Care Grid",
     tagline: "Healthcare & Trust Economy",
     description:
       "A digital platform connecting families with trusted caregivers, designed to simplify discovery, verification, and engagement in the home-care ecosystem.",
     link: "https://lucent-pothos-17fb1e.netlify.app/auth",
     ctaText: "Explore Platform",
+    ctaStyle: "bg-[#38b2ac] hover:bg-[#319795] text-white border-none",
   },
   {
     status: "stealth",

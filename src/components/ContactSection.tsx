@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Phone, Send } from "lucide-react";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -79,13 +79,30 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">
-                      Contact
+                      Phone
                     </h4>
                     <a
                       href="tel:+919361040506"
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
                       +91 93610 40506
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">
+                      Email
+                    </h4>
+                    <a
+                      href="mailto:contactus@brn.co.in"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      contactus@brn.co.in
                     </a>
                   </div>
                 </div>

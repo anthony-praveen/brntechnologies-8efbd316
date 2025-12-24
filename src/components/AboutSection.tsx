@@ -67,7 +67,7 @@ const AboutSection = () => {
               <h3 className="text-2xl md:text-3xl font-bold text-foreground mt-4 mb-4">
                 Maria Zita Anthony
               </h3>
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-2">
                 <p className="text-primary font-medium">Founder & CEO</p>
                 <a
                   href="https://www.linkedin.com/in/maria-zita-anthony/"
@@ -79,6 +79,12 @@ const AboutSection = () => {
                   <Linkedin className="w-5 h-5" />
                 </a>
               </div>
+              <a
+                href="mailto:zita@brn.co.in"
+                className="text-muted-foreground hover:text-primary transition-colors text-sm mb-4 inline-block"
+              >
+                zita@brn.co.in
+              </a>
               <p className="text-muted-foreground leading-relaxed mb-6">
                 Entrepreneur and technology leader with strong expertise in software engineering, product delivery, and quality assurance.
               </p>

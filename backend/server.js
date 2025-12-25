@@ -27,22 +27,22 @@ app.post("/api/contact", async (req, res) => {
 
     const params = { name, email, phone, interest, message };
 
-    // 🔹 Send to ContactUs
-    await notificationapi.send({
-      type: "brn_enquiries",
-      to: {
-        email: "contactus@brn.co.in",
-        number: "+919361040506"
-      },
-      parameters: params
-    });
-
     // 🔹 Send to Zita (SEPARATE SEND — REQUIRED FOR SMS/CALL)
     await notificationapi.send({
       type: "brn_enquiries",
       to: {
         email: "zitaclement@gmail.com",
         number: "+919168759744"
+      },
+      parameters: params
+    });
+
+    // 🔹 Send to ContactUs
+    await notificationapi.send({
+      type: "brn_enquiries",
+      to: {
+        email: "contactus@brn.co.in",
+        number: "+919361040506"
       },
       parameters: params
     });

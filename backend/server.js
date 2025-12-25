@@ -21,39 +21,53 @@ app.get("/health", (req, res) => {
 });
 
 // Contact form endpoint
-app.post("/api/contact", async (req, res) => {
+app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, phone, interest, message } = req.body;
 
-    if (!name || !email || !interest) {
+    // Basic validation
+    if (!name || !email || !message) {
       return res.status(400).json({
-        error: "Name, email, and interest are required",
+        error: 'Name, email, and message are required'
       });
     }
 
-    await NotificationAPI.send({
-      type: "brn_enquiries",
-      to: {
-        email: "contactus@brn.co.in",
-        number: "+919361040506",
-      },
+    await notificationapi.send({
+      type: 'brn_enquiries',
+
+      // MULTIPLE recipients (this is correct)
+      to: [
+        {
+          id: 'contactus@brn.co.in',
+          email: 'contactus@brn.co.in',
+          number: '+919361040506'
+        },
+        {
+          id: 'zitaclement@gmail.com',
+          email: 'zitaclement@gmail.com',
+          number: '+919168759744'
+        }
+      ],
+
+      // These map directly to your templates
       parameters: {
         name,
         email,
-        phone: phone || "Not provided",
-        interest,
-        message: message || "No message provided",
-      },
+        phone: phone || 'Not provided',
+        interest: interest || 'General',
+        message
+      }
     });
 
     res.json({
       success: true,
-      message: "Enquiry submitted successfully",
+      message: 'Enquiry sent successfully'
     });
+
   } catch (error) {
-    console.error("NotificationAPI error:", error);
+    console.error('NotificationAPI error:', error);
     res.status(500).json({
-      error: "Failed to send enquiry",
+      error: 'Failed to send enquiry'
     });
   }
 });

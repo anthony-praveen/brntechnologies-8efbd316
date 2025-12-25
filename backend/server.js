@@ -32,7 +32,23 @@ app.post('/api/contact', async (req, res) => {
       });
     }
     // Identify / upsert end users (VERY IMPORTANT)
-    await notificationapi.identify([
+    // Identify ContactUs
+    await notificationapi.identify({
+      id: 'contactus@brn.co.in',
+      email: 'contactus@brn.co.in',
+      number: '+919361040506'
+    });
+
+    // Identify Zita
+    await notificationapi.identify({
+      id: 'zitaclement@gmail.com',
+      email: 'zitaclement@gmail.com',
+      number: '+919168759744'
+    });
+      
+  await notificationapi.send({
+    type: 'brn_enquiries',
+    to: [
       {
         id: 'contactus@brn.co.in',
         email: 'contactus@brn.co.in',
@@ -43,35 +59,15 @@ app.post('/api/contact', async (req, res) => {
         email: 'zitaclement@gmail.com',
         number: '+919168759744'
       }
-    ]);
-
-
-    await notificationapi.send({
-      type: 'brn_enquiries',
-
-      // MULTIPLE recipients (this is correct)
-      to: [
-        {
-          id: 'contactus@brn.co.in',
-          email: 'contactus@brn.co.in',
-          number: '+919361040506'
-        },
-        {
-          id: 'zitaclement@gmail.com',
-          email: 'zitaclement@gmail.com',
-          number: '+919168759744'
-        }
-      ],
-
-      // These map directly to your templates
-      parameters: {
-        name,
-        email,
-        phone: phone || 'Not provided',
-        interest: interest || 'General',
-        message
-      }
-    });
+    ],
+    parameters: {
+      name,
+      email,
+      phone,
+      interest: interestType,
+      message
+    }
+  });
 
     res.json({
       success: true,

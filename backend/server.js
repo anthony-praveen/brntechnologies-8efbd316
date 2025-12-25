@@ -33,14 +33,14 @@ app.post('/api/contact', async (req, res) => {
     }
     // Identify / upsert end users (VERY IMPORTANT)
     // Identify ContactUs
-    await notificationapi.identify({
+    await notificationapi.identifyUser({
       id: 'contactus@brn.co.in',
       email: 'contactus@brn.co.in',
       number: '+919361040506'
     });
 
     // Identify Zita
-    await notificationapi.identify({
+    await notificationapi.identifyUser({
       id: 'zitaclement@gmail.com',
       email: 'zitaclement@gmail.com',
       number: '+919168759744'

@@ -20,36 +20,26 @@ notificationapi.init(
 app.get("/health", (_, res) => res.send("OK"));
 
 // Contact form endpoint
-app.post("/api/contact", async (req, res) => {
+app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, phone, interest, message } = req.body;
 
     if (!name || !email || !message) {
       return res.status(400).json({
-        error: "Name, email, and message are required"
+        error: 'Name, email, and message are required'
       });
     }
 
-    // ✅ Identify the person who submitted the enquiry (optional but clean)
-    await notificationapi.identifyUser({
-      id: email,
-      email,
-      number: phone
-    });
-
-    // ✅ Send notification to BOTH admins
-    await notificationapi.send({
-      type: "brn_enquiries",
+    await NotificationAPI.send({
+      type: 'brn_enquiries',
       to: [
         {
-          id: "contactus@brn.co.in",
-          email: "contactus@brn.co.in",
-          number: "+919361040506"
+          email: 'contactus@brn.co.in',
+          number: '+919361040506'
         },
         {
-          id: "zitaclement@gmail.com",
-          email: "zitaclement@gmail.com",
-          number: "+919168759744"
+          email: 'zitaclement@gmail.com',
+          number: '+919168759744'
         }
       ],
       parameters: {
@@ -63,11 +53,12 @@ app.post("/api/contact", async (req, res) => {
 
     res.json({ success: true });
 
-  } catch (error) {
-    console.error("NotificationAPI error:", error);
-    res.status(500).json({ error: "Failed to send enquiry" });
+  } catch (err) {
+    console.error('NotificationAPI error:', err);
+    res.status(500).json({ error: 'Failed to send enquiry' });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`BRN backend running on port ${PORT}`);

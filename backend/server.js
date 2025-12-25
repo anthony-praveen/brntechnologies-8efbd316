@@ -27,9 +27,19 @@ app.post("/api/contact", async (req, res) => {
 
     const params = { name, email, phone, interest, message };
 
-    // 🔹 Send to Zita (SEPARATE SEND — REQUIRED FOR SMS/CALL)
+    // ContactUs
     await notificationapi.send({
-      type: "brn_enquiries",
+      type: "brn_enquiries_contactus",
+      to: {
+        email: "contactus@brn.co.in",
+        number: "+919361040506"
+      },
+      parameters: params
+    });
+
+    // Zita
+    await notificationapi.send({
+      type: "brn_enquiries_zita",
       to: {
         email: "zitaclement@gmail.com",
         number: "+919168759744"
@@ -37,15 +47,6 @@ app.post("/api/contact", async (req, res) => {
       parameters: params
     });
 
-    // 🔹 Send to ContactUs
-    await notificationapi.send({
-      type: "brn_enquiries",
-      to: {
-        email: "contactus@brn.co.in",
-        number: "+919361040506"
-      },
-      parameters: params
-    });
 
     res.json({ success: true });
 

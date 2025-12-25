@@ -7,8 +7,9 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
     "cors": "^2.8.5",
-    "notificationapi-node-server-sdk": "latest"
+    "dotenv": "^17.2.3",
+    "express": "^4.19.2",
+    "notificationapi-node-server-sdk": "^2.8.0"
   }
 }

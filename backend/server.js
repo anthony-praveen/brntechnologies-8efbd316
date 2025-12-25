@@ -31,6 +31,20 @@ app.post('/api/contact', async (req, res) => {
         error: 'Name, email, and message are required'
       });
     }
+    // Identify / upsert end users (VERY IMPORTANT)
+    await notificationapi.identify([
+      {
+        id: 'contactus@brn.co.in',
+        email: 'contactus@brn.co.in',
+        number: '+919361040506'
+      },
+      {
+        id: 'zitaclement@gmail.com',
+        email: 'zitaclement@gmail.com',
+        number: '+919168759744'
+      }
+    ]);
+
 
     await notificationapi.send({
       type: 'brn_enquiries',

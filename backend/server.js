@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import NotificationAPI from "notificationapi-node-server-sdk";
+import notificationapi from "notificationapi-node-server-sdk";
+import "dotenv/config";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,80 +10,65 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Initialize NotificationAPI securely
-NotificationAPI.init(
-  process.env.NOTIFICATION_CLIENT_ID,
-  process.env.NOTIFICATION_CLIENT_SECRET
+// ✅ Correct initialization
+notificationapi.init(
+  process.env.NOTIFICATIONAPI_CLIENT_ID,
+  process.env.NOTIFICATIONAPI_CLIENT_SECRET
 );
 
-// Health check (Render-friendly)
-app.get("/health", (req, res) => {
-  res.status(200).send("OK");
-});
+// Health check
+app.get("/health", (_, res) => res.send("OK"));
 
 // Contact form endpoint
-app.post('/api/contact', async (req, res) => {
+app.post("/api/contact", async (req, res) => {
   try {
     const { name, email, phone, interest, message } = req.body;
 
-    // Basic validation
     if (!name || !email || !message) {
       return res.status(400).json({
-        error: 'Name, email, and message are required'
+        error: "Name, email, and message are required"
       });
     }
-    // Identify / upsert end users (VERY IMPORTANT)
-    // Identify ContactUs
-    await notificationapi.identifyUser({
-      id: 'contactus@brn.co.in',
-      email: 'contactus@brn.co.in',
-      number: '+919361040506'
-    });
 
-    // Identify Zita
+    // ✅ Identify the person who submitted the enquiry (optional but clean)
     await notificationapi.identifyUser({
-      id: 'zitaclement@gmail.com',
-      email: 'zitaclement@gmail.com',
-      number: '+919168759744'
-    });
-      
-  await notificationapi.send({
-    type: 'brn_enquiries',
-    to: [
-      {
-        id: 'contactus@brn.co.in',
-        email: 'contactus@brn.co.in',
-        number: '+919361040506'
-      },
-      {
-        id: 'zitaclement@gmail.com',
-        email: 'zitaclement@gmail.com',
-        number: '+919168759744'
-      }
-    ],
-    parameters: {
-      name,
+      id: email,
       email,
-      phone,
-      interest: interestType,
-      message
-    }
-  });
-
-    res.json({
-      success: true,
-      message: 'Enquiry sent successfully'
+      number: phone
     });
+
+    // ✅ Send notification to BOTH admins
+    await notificationapi.send({
+      type: "brn_enquiries",
+      to: [
+        {
+          id: "contactus@brn.co.in",
+          email: "contactus@brn.co.in",
+          number: "+919361040506"
+        },
+        {
+          id: "zitaclement@gmail.com",
+          email: "zitaclement@gmail.com",
+          number: "+919168759744"
+        }
+      ],
+      parameters: {
+        name,
+        email,
+        phone,
+        interest,
+        message
+      }
+    });
+
+    res.json({ success: true });
 
   } catch (error) {
-    console.error('NotificationAPI error:', error);
-    res.status(500).json({
-      error: 'Failed to send enquiry'
-    });
+    console.error("NotificationAPI error:", error);
+    res.status(500).json({ error: "Failed to send enquiry" });
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`BRN backend running on port ${PORT}`);
 });

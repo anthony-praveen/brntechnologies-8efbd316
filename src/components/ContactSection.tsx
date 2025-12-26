@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { validateContactForm, ContactFormData, COUNTRY_CODES } from "@/lib/validation";
+import { validateContactForm, ContactFormData, COUNTRY_CODES, formatPhoneNumber, getPhoneDigits } from "@/lib/validation";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -201,26 +201,26 @@ const ContactSection = () => {
                           if (errors.phone) setErrors({ ...errors, phone: '' });
                         }}
                       >
-                        <SelectTrigger className="w-[100px] flex-shrink-0">
+                        <SelectTrigger className="w-[120px] flex-shrink-0">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="max-h-[300px]">
                           {COUNTRY_CODES.map((country) => (
                             <SelectItem key={country.code} value={country.code}>
-                              {country.code}
+                              {country.code} {country.country}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       <Input
                         type="tel"
-                        value={formData.phone}
+                        value={formatPhoneNumber(formData.phone, formData.countryCode)}
                         onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+                          const digits = getPhoneDigits(e.target.value);
                           const country = COUNTRY_CODES.find(c => c.code === formData.countryCode);
                           const maxLen = country?.maxLength || 15;
-                          if (value.length <= maxLen) {
-                            setFormData({ ...formData, phone: value });
+                          if (digits.length <= maxLen) {
+                            setFormData({ ...formData, phone: digits });
                             if (errors.phone) setErrors({ ...errors, phone: '' });
                           }
                         }}

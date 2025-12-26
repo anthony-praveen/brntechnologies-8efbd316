@@ -11,13 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { validateContactForm, ContactFormData } from "@/lib/validation";
+import { validateContactForm, ContactFormData, COUNTRY_CODES } from "@/lib/validation";
 
 const ContactSection = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
+    countryCode: "+91",
     phone: "",
     interest: "",
     message: "",
@@ -64,7 +65,7 @@ const ContactSection = () => {
         description: "Thank you for reaching out. We'll get back to you soon.",
       });
 
-      setFormData({ name: "", email: "", phone: "", interest: "", message: "" });
+      setFormData({ name: "", email: "", countryCode: "+91", phone: "", interest: "", message: "" });
     } catch (error) {
       toast({
         title: "Error",
@@ -192,16 +193,41 @@ const ContactSection = () => {
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Phone
                     </label>
-                    <Input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => {
-                        setFormData({ ...formData, phone: e.target.value });
-                        if (errors.phone) setErrors({ ...errors, phone: '' });
-                      }}
-                      placeholder="+91 XXXXX XXXXX"
-                      className={errors.phone ? 'border-destructive' : ''}
-                    />
+                    <div className="flex gap-2">
+                      <Select
+                        value={formData.countryCode}
+                        onValueChange={(value) => {
+                          setFormData({ ...formData, countryCode: value, phone: '' });
+                          if (errors.phone) setErrors({ ...errors, phone: '' });
+                        }}
+                      >
+                        <SelectTrigger className="w-[100px] flex-shrink-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {COUNTRY_CODES.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              {country.code}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+                          const country = COUNTRY_CODES.find(c => c.code === formData.countryCode);
+                          const maxLen = country?.maxLength || 15;
+                          if (value.length <= maxLen) {
+                            setFormData({ ...formData, phone: value });
+                            if (errors.phone) setErrors({ ...errors, phone: '' });
+                          }
+                        }}
+                        placeholder={`${COUNTRY_CODES.find(c => c.code === formData.countryCode)?.maxLength || 10} digits`}
+                        className={errors.phone ? 'border-destructive' : ''}
+                      />
+                    </div>
                     {errors.phone && (
                       <p className="text-destructive text-xs mt-1">{errors.phone}</p>
                     )}

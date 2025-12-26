@@ -14,21 +14,35 @@ export const containsProfanity = (text: string): boolean => {
   });
 };
 
-// Validate phone number - accepts Indian format with optional +91
-export const isValidPhoneNumber = (phone: string): boolean => {
+// Country codes with max phone lengths
+export const COUNTRY_CODES = [
+  { code: '+91', country: 'India', maxLength: 10, startsWith: /^[6-9]/ },
+  { code: '+1', country: 'USA/Canada', maxLength: 10, startsWith: /^[2-9]/ },
+  { code: '+44', country: 'UK', maxLength: 10, startsWith: /^[1-9]/ },
+  { code: '+971', country: 'UAE', maxLength: 9, startsWith: /^[0-9]/ },
+  { code: '+65', country: 'Singapore', maxLength: 8, startsWith: /^[0-9]/ },
+  { code: '+61', country: 'Australia', maxLength: 9, startsWith: /^[0-9]/ },
+  { code: '+49', country: 'Germany', maxLength: 11, startsWith: /^[0-9]/ },
+  { code: '+33', country: 'France', maxLength: 9, startsWith: /^[0-9]/ },
+];
+
+// Validate phone number based on country code
+export const isValidPhoneNumber = (phone: string, countryCode: string): boolean => {
   if (!phone || phone.trim() === '') return true; // Phone is optional
   
-  // Remove spaces, dashes, and parentheses for validation
   const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+  const country = COUNTRY_CODES.find(c => c.code === countryCode);
   
-  // Indian phone number patterns:
-  // +91XXXXXXXXXX (13 chars with +91)
-  // 91XXXXXXXXXX (12 chars with 91)
-  // XXXXXXXXXX (10 digits)
-  // 0XXXXXXXXXX (11 digits with leading 0)
-  const indianPhoneRegex = /^(\+91|91|0)?[6-9]\d{9}$/;
+  if (!country) {
+    // For unknown country codes, just check it's digits only and reasonable length
+    return /^\d{6,15}$/.test(cleaned);
+  }
   
-  return indianPhoneRegex.test(cleaned);
+  // Check length and starting digit pattern for known countries
+  if (cleaned.length !== country.maxLength) return false;
+  if (!country.startsWith.test(cleaned)) return false;
+  
+  return /^\d+$/.test(cleaned);
 };
 
 // Validate email format
@@ -62,6 +76,7 @@ export interface ValidationResult {
 export interface ContactFormData {
   name: string;
   email: string;
+  countryCode: string;
   phone: string;
   interest: string;
   message: string;
@@ -89,8 +104,10 @@ export const validateContactForm = (data: ContactFormData): ValidationResult => 
   }
 
   // Phone validation
-  if (data.phone && !isValidPhoneNumber(data.phone)) {
-    errors.phone = 'Please enter a valid Indian phone number (10 digits, starting with 6-9)';
+  if (data.phone && !isValidPhoneNumber(data.phone, data.countryCode)) {
+    const country = COUNTRY_CODES.find(c => c.code === data.countryCode);
+    const maxLen = country?.maxLength || 10;
+    errors.phone = `Please enter a valid ${maxLen}-digit phone number`;
   }
 
   // Interest validation

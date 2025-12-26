@@ -181,11 +181,20 @@ export const validateContactForm = (data: ContactFormData): ValidationResult => 
     errors.email = 'Please use an appropriate email address';
   }
 
-  // Phone validation
-  if (data.phone && !isValidPhoneNumber(data.phone, data.countryCode)) {
+  // Phone validation - country-specific
+  if (data.phone && data.phone.trim() !== '') {
     const country = COUNTRY_CODES.find(c => c.code === data.countryCode);
-    const maxLen = country?.maxLength || 10;
-    errors.phone = `Please enter a valid ${maxLen}-digit phone number`;
+    const digits = getPhoneDigits(data.phone);
+    
+    if (country) {
+      if (digits.length !== country.maxLength) {
+        errors.phone = `${country.country} phone numbers must be exactly ${country.maxLength} digits`;
+      } else if (!country.startsWith.test(digits)) {
+        errors.phone = `Invalid ${country.country} phone number format`;
+      }
+    } else if (!/^\d{6,15}$/.test(digits)) {
+      errors.phone = 'Please enter a valid phone number (6-15 digits)';
+    }
   }
 
   // Interest validation

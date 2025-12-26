@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { Mail, MapPin, Phone, Send, ChevronsUpDown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,8 +10,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { useToast } from "@/hooks/use-toast";
 import { validateContactForm, ContactFormData, COUNTRY_CODES, formatPhoneNumber, getPhoneDigits } from "@/lib/validation";
+import { cn } from "@/lib/utils";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -25,9 +39,12 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [countryOpen, setCountryOpen] = useState(false);
 
   // TODO: Replace with your Hostinger backend URL after deployment
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  const selectedCountry = COUNTRY_CODES.find(c => c.code === formData.countryCode);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,10 +97,10 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-20 bg-card">
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-5 gap-12">
             {/* Contact Info */}
-            <div>
+            <div className="lg:col-span-2">
               <span className="text-primary font-medium text-sm uppercase tracking-wider">
                 Get in Touch
               </span>
@@ -148,7 +165,7 @@ const ContactSection = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-background rounded-xl border border-border p-8">
+            <div className="lg:col-span-3 bg-background rounded-xl border border-border p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
@@ -194,24 +211,53 @@ const ContactSection = () => {
                       Phone
                     </label>
                     <div className="flex gap-2">
-                      <Select
-                        value={formData.countryCode}
-                        onValueChange={(value) => {
-                          setFormData({ ...formData, countryCode: value, phone: '' });
-                          if (errors.phone) setErrors({ ...errors, phone: '' });
-                        }}
-                      >
-                        <SelectTrigger className="w-[120px] flex-shrink-0">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-[300px]">
-                          {COUNTRY_CODES.map((country) => (
-                            <SelectItem key={country.code} value={country.code}>
-                              {country.code} {country.country}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Popover open={countryOpen} onOpenChange={setCountryOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={countryOpen}
+                            className="w-[130px] justify-between flex-shrink-0 px-3"
+                          >
+                            <span className="flex items-center gap-1.5 truncate">
+                              <span>{selectedCountry?.flag}</span>
+                              <span className="text-sm">{selectedCountry?.code}</span>
+                            </span>
+                            <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[280px] p-0" align="start">
+                          <Command>
+                            <CommandInput placeholder="Search country..." />
+                            <CommandList>
+                              <CommandEmpty>No country found.</CommandEmpty>
+                              <CommandGroup className="max-h-[300px] overflow-auto">
+                                {COUNTRY_CODES.map((country) => (
+                                  <CommandItem
+                                    key={country.code}
+                                    value={`${country.country} ${country.code}`}
+                                    onSelect={() => {
+                                      setFormData({ ...formData, countryCode: country.code, phone: '' });
+                                      if (errors.phone) setErrors({ ...errors, phone: '' });
+                                      setCountryOpen(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        formData.countryCode === country.code ? "opacity-100" : "opacity-0"
+                                      )}
+                                    />
+                                    <span className="mr-2">{country.flag}</span>
+                                    <span className="flex-1">{country.country}</span>
+                                    <span className="text-muted-foreground text-sm">{country.code}</span>
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                       <Input
                         type="tel"
                         value={formatPhoneNumber(formData.phone, formData.countryCode)}
@@ -224,8 +270,8 @@ const ContactSection = () => {
                             if (errors.phone) setErrors({ ...errors, phone: '' });
                           }
                         }}
-                        placeholder={`${COUNTRY_CODES.find(c => c.code === formData.countryCode)?.maxLength || 10} digits`}
-                        className={errors.phone ? 'border-destructive' : ''}
+                        placeholder={`${selectedCountry?.maxLength || 10} digits`}
+                        className={cn("flex-1", errors.phone ? 'border-destructive' : '')}
                       />
                     </div>
                     {errors.phone && (

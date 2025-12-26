@@ -11,10 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { validateContactForm, ContactFormData } from "@/lib/validation";
 
 const ContactSection = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     phone: "",
@@ -22,12 +23,27 @@ const ContactSection = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // TODO: Replace with your Hostinger backend URL after deployment
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    const validation = validateContactForm(formData);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      toast({
+        title: "Validation Error",
+        description: "Please fix the errors in the form.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setErrors({});
     setIsSubmitting(true);
 
     try {
@@ -139,13 +155,17 @@ const ContactSection = () => {
                       Name *
                     </label>
                     <Input
-                      required
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        if (errors.name) setErrors({ ...errors, name: '' });
+                      }}
                       placeholder="Your name"
+                      className={errors.name ? 'border-destructive' : ''}
                     />
+                    {errors.name && (
+                      <p className="text-destructive text-xs mt-1">{errors.name}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
@@ -153,13 +173,17 @@ const ContactSection = () => {
                     </label>
                     <Input
                       type="email"
-                      required
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        if (errors.email) setErrors({ ...errors, email: '' });
+                      }}
                       placeholder="you@company.com"
+                      className={errors.email ? 'border-destructive' : ''}
                     />
+                    {errors.email && (
+                      <p className="text-destructive text-xs mt-1">{errors.email}</p>
+                    )}
                   </div>
                 </div>
 
@@ -171,24 +195,29 @@ const ContactSection = () => {
                     <Input
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, phone: e.target.value });
+                        if (errors.phone) setErrors({ ...errors, phone: '' });
+                      }}
                       placeholder="+91 XXXXX XXXXX"
+                      className={errors.phone ? 'border-destructive' : ''}
                     />
+                    {errors.phone && (
+                      <p className="text-destructive text-xs mt-1">{errors.phone}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Interest Type *
                     </label>
                     <Select
-                      required
                       value={formData.interest}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, interest: value })
-                      }
+                      onValueChange={(value) => {
+                        setFormData({ ...formData, interest: value });
+                        if (errors.interest) setErrors({ ...errors, interest: '' });
+                      }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className={errors.interest ? 'border-destructive' : ''}>
                         <SelectValue placeholder="Select interest" />
                       </SelectTrigger>
                       <SelectContent>
@@ -197,6 +226,9 @@ const ContactSection = () => {
                         <SelectItem value="partner">Partner</SelectItem>
                       </SelectContent>
                     </Select>
+                    {errors.interest && (
+                      <p className="text-destructive text-xs mt-1">{errors.interest}</p>
+                    )}
                   </div>
                 </div>
 
@@ -207,11 +239,16 @@ const ContactSection = () => {
                   <Textarea
                     rows={4}
                     value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, message: e.target.value });
+                      if (errors.message) setErrors({ ...errors, message: '' });
+                    }}
                     placeholder="Tell us about your project or inquiry..."
+                    className={errors.message ? 'border-destructive' : ''}
                   />
+                  {errors.message && (
+                    <p className="text-destructive text-xs mt-1">{errors.message}</p>
+                  )}
                 </div>
 
                 <Button

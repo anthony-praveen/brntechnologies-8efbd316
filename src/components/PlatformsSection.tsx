@@ -13,7 +13,7 @@ const platforms = [
     name: "Service Geni",
     tagline: "Proof of Execution",
     description:
-      "Service management platform built and operated by BRN Technologies. Demonstrates full product lifecycle ownership—from idea to build to launch to operate.",
+      "Service management platform built and operated by BRN Technologies. Demonstrates full product lifecycle ownership from idea to build to launch to operate.",
     link: "https://servicegeni.in",
     ctaText: "View Platform",
     ctaStyle: "bg-[#FF7033] hover:bg-[#E5632E] text-white border-none",

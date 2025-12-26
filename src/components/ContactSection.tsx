@@ -26,8 +26,8 @@ const ContactSection = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [countryOpen, setCountryOpen] = useState(false);
 
-  // Use environment variable for production, fallback to relative path
-  const API_URL = import.meta.env.VITE_API_URL || '';
+  // Use environment variable for production, fallback to production backend
+  const API_URL = import.meta.env.VITE_API_URL || 'https://brn.co.in';
   const triggerConfetti = () => {
     confetti({
       particleCount: 100,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, MapPin, Phone, Send, ChevronsUpDown, Check } from "lucide-react";
+import { Mail, MapPin, Phone, Send, ChevronsUpDown, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,6 +26,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { validateContactForm, ContactFormData, COUNTRY_CODES, formatPhoneNumber, getPhoneDigits } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import confetti from "canvas-confetti";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -41,8 +42,33 @@ const ContactSection = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [countryOpen, setCountryOpen] = useState(false);
 
-  // TODO: Replace with your Hostinger backend URL after deployment
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  // Use environment variable for production, fallback to relative path
+  const API_URL = import.meta.env.VITE_API_URL || '';
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444']
+    });
+    
+    // Second burst for extra celebration
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 }
+      });
+      confetti({
+        particleCount: 50,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 }
+      });
+    }, 250);
+  };
 
   const selectedCountry = COUNTRY_CODES.find(c => c.code === formData.countryCode);
 
@@ -77,6 +103,9 @@ const ContactSection = () => {
         throw new Error('Failed to send message');
       }
 
+      // Trigger confetti celebration
+      triggerConfetti();
+      
       toast({
         title: "Message Sent!",
         description: "Thank you for reaching out. We'll get back to you soon.",
@@ -328,8 +357,17 @@ const ContactSection = () => {
                   className="w-full gap-2"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                  <Send className="w-4 h-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
                 </Button>
               </form>
             </div>

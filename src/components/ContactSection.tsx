@@ -26,8 +26,8 @@ const ContactSection = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [countryOpen, setCountryOpen] = useState(false);
 
-  // Use environment variable for production, fallback to production backend
-  const API_URL = import.meta.env.VITE_API_URL || 'https://brn.co.in';
+  // API base URL from environment variable - required for form submission
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const triggerConfetti = () => {
     confetti({
       particleCount: 100,
@@ -62,6 +62,16 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Fail fast if API URL is not configured
+    if (!API_BASE_URL) {
+      toast({
+        title: "Configuration Error",
+        description: "API endpoint is not configured. Please contact support.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Validate form
     const validation = validateContactForm(formData);
     if (!validation.isValid) {
@@ -76,12 +86,21 @@ const ContactSection = () => {
     setErrors({});
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/api/contact`, {
+      // Prepare payload matching backend contract (without countryCode)
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: `${formData.countryCode} ${formData.phone}`,
+        interest: formData.interest,
+        message: formData.message
+      };
+
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       if (!response.ok) {
         throw new Error('Failed to send message');

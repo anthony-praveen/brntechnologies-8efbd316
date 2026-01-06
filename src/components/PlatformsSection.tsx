@@ -15,6 +15,19 @@ const platforms = [{
   ctaText: "View Platform",
   ctaStyle: "bg-[#FF7033] hover:bg-[#E5632E] text-white border-none"
 }, {
+  status: "live",
+  statusLabel: "Live Product",
+  statusColor: "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20",
+  cardStyle: "bg-gradient-to-br from-[#F5F3FF] to-white border-[#8B5CF6]/30 hover:border-[#8B5CF6]/60 hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.3)]",
+  icon: CheckCircle,
+  iconColor: "text-[#8B5CF6]",
+  name: "bOrGamer",
+  tagline: "Digital Playground",
+  description: "A modern gaming platform bringing classic board games like Ludo, Chess, and UNO to the browser. Family-friendly, accessible, and designed for pure joy without friction.",
+  link: "https://ogs.wtf",
+  ctaText: "Play Now",
+  ctaStyle: "bg-[#8B5CF6] hover:bg-[#7C3AED] text-white border-none"
+}, {
   status: "near-launch",
   statusLabel: "Near-Launch",
   statusColor: "bg-[#38b2ac]/10 text-[#38b2ac] border-[#38b2ac]/20",

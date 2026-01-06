@@ -17,16 +17,19 @@ const platforms = [{
 }, {
   status: "live",
   statusLabel: "Live Product",
-  statusColor: "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20",
-  cardStyle: "bg-gradient-to-br from-[#F5F3FF] to-white border-[#8B5CF6]/30 hover:border-[#8B5CF6]/60 hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.3)]",
+  statusColor: "bg-[#7C3AED]/15 text-[#7C3AED] border-[#7C3AED]/30",
+  cardStyle: "bg-gradient-to-br from-[#7C3AED] to-[#5B21B6] border-[#7C3AED]/50 hover:border-[#A78BFA] hover:shadow-[0_10px_40px_-10px_rgba(124,58,237,0.5)]",
   icon: CheckCircle,
-  iconColor: "text-[#8B5CF6]",
+  iconColor: "text-white",
   name: "bOrGamer",
   tagline: "Digital Playground",
+  taglineColor: "text-[#C4B5FD]",
+  titleColor: "text-white",
+  descriptionColor: "text-white/80",
   description: "A modern gaming platform bringing classic board games like Ludo, Chess, and UNO to the browser. Family-friendly, accessible, and designed for pure joy without friction.",
   link: "https://ogs.wtf",
   ctaText: "Play Now",
-  ctaStyle: "bg-[#8B5CF6] hover:bg-[#7C3AED] text-white border-none"
+  ctaStyle: "bg-white hover:bg-gray-100 text-[#7C3AED] border-none font-semibold"
 }, {
   status: "near-launch",
   statusLabel: "Near-Launch",
@@ -78,7 +81,7 @@ const PlatformsSection = () => {
           <p className="text-muted-foreground text-lg">From live products to stealth innovations a clear evolution from services to IP-led platforms.</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {platforms.map((platform, index) => <div key={index} className={`rounded-xl border p-8 transition-all duration-300 flex flex-col ${platform.cardStyle || "bg-background border-border hover:border-primary/30"}`}>
               <Badge variant="outline" className={`w-fit mb-4 ${platform.statusColor}`}>
                 <platform.icon className={`w-3 h-3 mr-1 ${platform.iconColor || ""}`} />

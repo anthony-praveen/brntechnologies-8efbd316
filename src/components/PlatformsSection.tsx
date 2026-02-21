@@ -40,7 +40,7 @@ const platforms = [{
   name: "Home Care Grid",
   tagline: "Healthcare & Trust Economy",
   description: "A digital platform connecting families with trusted caregivers, designed to simplify discovery, verification, and engagement in the home-care ecosystem.",
-  link: "https://lucent-pothos-17fb1e.netlify.app/auth",
+  link: "https://homecaregrid.netlify.app/",
   ctaText: "Explore Platform",
   ctaStyle: "bg-[#38b2ac] hover:bg-[#319795] text-white border-none"
 }, {
